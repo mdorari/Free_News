@@ -25,13 +25,15 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.mehrdad.freenews.R
+import com.mehrdad.freenews.data.model.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.ui.theme.Primary
 import com.mehrdad.freenews.ui.theme.Secondary
 
 @Composable
 fun OtherNews(
-    modifier: Modifier = Modifier
+//    modifier: Modifier = Modifier,
+    article: Article
 ) {
     val spacing = LocalSpacing.current
     Column(
@@ -40,29 +42,29 @@ fun OtherNews(
             .padding(spacing.spaceSmall),
         horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(spacing.spaceSemiMedium)),
-            painter = painterResource(id = R.drawable.sample_image),
-            contentDescription = "sample image"
-        )
+//        Image(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .clip(RoundedCornerShape(spacing.spaceSemiMedium)),
+//            painter = painterResource(id = R.drawable.sample_image),
+//            contentDescription = "sample image"
+//        )
 
-//            Image(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .clip(RoundedCornerShape(spacing.spaceSemiMedium)),
-//                painter = rememberAsyncImagePainter(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data("")
-//                        .size(Size.ORIGINAL)
-//                        .crossfade(true)
-//                        .build()
-//                ),
-//                contentDescription = ""
-//            )
+            Image(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(spacing.spaceSemiMedium)),
+                painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(article.urlToImage)
+                        .size(Size.ORIGINAL)
+                        .crossfade(true)
+                        .build()
+                ),
+                contentDescription = ""
+            )
         Text(
-            text = "Health Officials launch campaign for Mental Health",
+            text = article.title,
             fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
@@ -71,7 +73,7 @@ fun OtherNews(
             modifier = Modifier.padding(top = spacing.spaceSmall)
         )
         Text(
-            text = "The Advocates",
+            text = article.source.name,
             fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
@@ -81,11 +83,11 @@ fun OtherNews(
     }
 }
 
-@Preview(
-    device = "spec:width=1440px,height=2560px,dpi=560", showSystemUi = true,
-    showBackground = true
-)
-@Composable
-fun OtherNewsPrev() {
-    OtherNews()
-}
+//@Preview(
+//    device = "spec:width=1440px,height=2560px,dpi=560", showSystemUi = true,
+//    showBackground = true
+//)
+//@Composable
+//fun OtherNewsPrev() {
+//    OtherNews()
+//}

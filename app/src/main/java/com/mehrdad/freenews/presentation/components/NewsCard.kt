@@ -28,29 +28,32 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.mehrdad.freenews.R
+import com.mehrdad.freenews.data.model.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.ui.theme.Primary
 
 @Composable
-fun NewsCard() {
+fun NewsCard(
+    article: Article
+) {
     val spacing = LocalSpacing.current
 
-    val sampleImage =
-        "https://images6.alphacoders.com/488/thumb-1920-488158.jpg"
+//    val sampleImage =
+//        "https://images6.alphacoders.com/488/thumb-1920-488158.jpg"
     Column(modifier = Modifier.padding(spacing.spaceMedium)) {
         Box() {
             Image(
                 modifier = Modifier.clip(RoundedCornerShape(spacing.spaceSemiLarge)),
-                painter = painterResource(id = R.drawable.sample_image),
+//                painter = painterResource(id = R.drawable.sample_image),
 
-//            painter = rememberAsyncImagePainter(
-//                model = ImageRequest.Builder(LocalContext.current)
-//                    .data(sampleImage)
-//                    .size(coil.size.Size.ORIGINAL)
-//                    .crossfade(true)
-//                    .build()
-//            ),
-                contentDescription = ""
+            painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(article.urlToImage)
+                    .size(coil.size.Size.ORIGINAL)
+                    .crossfade(true)
+                    .build()
+            ),
+                contentDescription = article.description
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
@@ -72,7 +75,7 @@ fun NewsCard() {
                     contentDescription = ""
                 )
                 Text(
-                    text = "Miracles in Science",
+                    text = article.source.name,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -84,7 +87,7 @@ fun NewsCard() {
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(spacing.spaceSemiMedium),
-                text = "Miracles in Science",
+                text = article.author ?: article.source.name,
                 color = Color.White,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
@@ -121,7 +124,7 @@ fun NewsCard() {
         Text(
             modifier = Modifier
                 .padding(top = spacing.spaceSemiMedium),
-            text = "Major breakthrough in Cancer Research leads to new treatment options",
+            text = article.title,
             color = Primary,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
@@ -132,10 +135,10 @@ fun NewsCard() {
 
 }
 
-@Preview(device = "spec:width=1440px,height=2560px,dpi=560", showSystemUi = true,
-    showBackground = true
-)
-@Composable
-fun NewsCardPreview() {
-    NewsCard()
-}
+//@Preview(device = "spec:width=1440px,height=2560px,dpi=560", showSystemUi = true,
+//    showBackground = true
+//)
+//@Composable
+//fun NewsCardPreview() {
+//    NewsCard()
+//}
