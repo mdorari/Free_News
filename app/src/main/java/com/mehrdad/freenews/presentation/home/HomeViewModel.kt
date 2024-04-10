@@ -1,5 +1,6 @@
 package com.mehrdad.freenews.presentation.home
 
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,8 +25,13 @@ class HomeViewModel @Inject constructor(
     var state by mutableStateOf(HomeState())
         private set
 
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    init {
+        getNews()
+    }
 
     fun onEvent(event: HomeEvent) {
         when (event) {

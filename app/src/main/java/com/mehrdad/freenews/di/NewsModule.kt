@@ -3,9 +3,12 @@ package com.mehrdad.freenews.di
 import com.mehrdad.freenews.data.api.NewsApi
 import com.mehrdad.freenews.data.repository.NewsRepository
 import com.mehrdad.freenews.data.repository.NewsRepositoryImpl
+import com.mehrdad.freenews.domain.usecase.GetNewsForCountry
+import com.mehrdad.freenews.domain.usecase.NewsUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,7 +42,7 @@ object NewsModule {
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-            .create()
+            .create(NewsApi::class.java)
     }
 
 //    @PrimaryKey
@@ -61,6 +64,16 @@ object NewsModule {
         return NewsRepositoryImpl(
 //            dao = db.dao,
             api = api
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideNewsUseCases(
+        repository: NewsRepository
+    ):NewsUseCases{
+        return NewsUseCases(
+            getNewsForCountry = GetNewsForCountry(repository)
         )
     }
 }

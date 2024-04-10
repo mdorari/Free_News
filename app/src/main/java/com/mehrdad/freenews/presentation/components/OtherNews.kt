@@ -3,7 +3,11 @@ package com.mehrdad.freenews.presentation.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,7 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -36,24 +42,18 @@ fun OtherNews(
     article: Article
 ) {
     val spacing = LocalSpacing.current
-    Column(
-        modifier = Modifier
-            .width(200.dp)
-            .padding(spacing.spaceSmall),
-        horizontalAlignment = Alignment.Start
-    ) {
-//        Image(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .clip(RoundedCornerShape(spacing.spaceSemiMedium)),
-//            painter = painterResource(id = R.drawable.sample_image),
-//            contentDescription = "sample image"
-//        )
-
+        Column(
+            modifier = Modifier
+                .width(200.dp)
+                .fillMaxHeight()
+                .padding(spacing.spaceSmall),
+            horizontalAlignment = Alignment.Start
+        ) {
             Image(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(spacing.spaceSemiMedium)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(spacing.spaceSemiMedium))
+                    .aspectRatio(2f),
                 painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(article.urlToImage)
@@ -61,27 +61,30 @@ fun OtherNews(
                         .crossfade(true)
                         .build()
                 ),
-                contentDescription = ""
+                contentScale = ContentScale.Crop,
+                contentDescription = article.description
             )
-        Text(
-            text = article.title,
-            fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp,
-            letterSpacing = (-0.4).sp,
-            color = Primary,
-            modifier = Modifier.padding(top = spacing.spaceSmall)
-        )
-        Text(
-            text = article.source.name,
-            fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp,
-            letterSpacing = (-0.4).sp,
-            color = Secondary,
-        )
+            Text(
+                text = article.title,
+                fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                letterSpacing = (-0.4).sp,
+                color = Primary,
+                maxLines = 4,
+                lineHeight = 14.sp,
+                modifier = Modifier.padding(top = spacing.spaceSmall)
+            )
+            Text(
+                text = article.source.name,
+                fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                letterSpacing = (-0.4).sp,
+                color = Secondary,
+            )
+        }
     }
-}
 
 //@Preview(
 //    device = "spec:width=1440px,height=2560px,dpi=560", showSystemUi = true,
