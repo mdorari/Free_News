@@ -1,5 +1,6 @@
 package com.mehrdad.freenews.data.api
 
+import com.mehrdad.freenews.BuildConfig
 import com.mehrdad.freenews.data.model.Headlines
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -33,6 +34,6 @@ interface NewsApi {
 
     companion object{
         const val BASE_URL = "https://newsapi.org"
-        const val API_KEY = "86afa9b6022e4c01945bfe5d0c80cab7"
+        const val API_KEY = BuildConfig.NEWS_API_KEY
     }
 }
