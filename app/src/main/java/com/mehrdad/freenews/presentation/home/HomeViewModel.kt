@@ -57,8 +57,13 @@ class HomeViewModel @Inject constructor(
                     apiKey = API_KEY
                 )
                 .onSuccess { articles ->
+                    val filteredArticles = articles.filter { article ->
+                        article.source.id != null
+                        article.urlToImage != null
+                    }
                     state = state.copy(
-                        articles = articles,
+                        bannerNews = filteredArticles.first(),
+                        articles = filteredArticles.drop(1),
                         isRefreshing = false
                     )
                 }

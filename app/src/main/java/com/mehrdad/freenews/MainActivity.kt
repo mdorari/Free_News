@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -29,10 +30,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.mehrdad.freenews.domain.BottomNavigationItem
+import com.mehrdad.freenews.navigation.Route
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.presentation.home.HomeScreen
 import com.mehrdad.freenews.presentation.home.HomeViewModel
+import com.mehrdad.freenews.presentation.profile.ProfileScreen
 import com.mehrdad.freenews.ui.theme.FreeNewsTheme
 import com.mehrdad.freenews.ui.theme.Primary
 import com.mehrdad.freenews.ui.theme.Secondary
@@ -59,6 +65,7 @@ class MainActivity : ComponentActivity() {
                         mutableIntStateOf(0)
                     }
                     val navigationItem = BottomNavigationItem.navbarItems
+                    val navController = rememberNavController()
 
                     Scaffold(
                         modifier = Modifier
@@ -81,6 +88,7 @@ class MainActivity : ComponentActivity() {
                                         selected = selectedItemIndex == index,
                                         onClick = {
                                             selectedItemIndex = index
+                                            navController.navigate(item.route)
                                         },
                                         label = {
                                             Text(
@@ -112,7 +120,19 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
-                        HomeScreen(paddingValues = it)
+                        NavHost(
+                            modifier = Modifier.padding(it),
+                            navController = navController,
+                            startDestination = Route.HOME){
+                            composable(Route.HOME){
+                                HomeScreen(
+                                    navController = navController
+                                )
+                            }
+                            composable(Route.PROFILE){
+                                ProfileScreen(navController = navController)
+                            }
+                        }
                     }
                 }
             }

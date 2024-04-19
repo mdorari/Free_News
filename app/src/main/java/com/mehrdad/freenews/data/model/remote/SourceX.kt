@@ -1,4 +1,4 @@
-package com.mehrdad.freenews.data.model
+package com.mehrdad.freenews.data.model.remote
 
 data class SourceX(
     val category: String,

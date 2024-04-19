@@ -1,4 +1,4 @@
-package com.mehrdad.freenews.data.model
+package com.mehrdad.freenews.data.model.remote
 
 data class Article(
     val author: String?,
@@ -8,5 +8,5 @@ data class Article(
     val source: Source,
     val title: String,
     val url: String,
-    val urlToImage: String
+    val urlToImage: String?
 )

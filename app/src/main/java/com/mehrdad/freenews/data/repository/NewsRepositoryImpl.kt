@@ -1,8 +1,7 @@
 package com.mehrdad.freenews.data.repository
 
 import com.mehrdad.freenews.data.api.NewsApi
-import com.mehrdad.freenews.data.model.Article
-import com.mehrdad.freenews.data.model.Headlines
+import com.mehrdad.freenews.data.model.remote.Article
 import java.lang.Exception
 
 class NewsRepositoryImpl(
@@ -25,5 +24,9 @@ class NewsRepositoryImpl(
             e.printStackTrace()
             Result.failure(e)
         }
+    }
+
+    override suspend fun changeCounty(country: String) {
+
     }
 }

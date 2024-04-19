@@ -1,6 +1,6 @@
 package com.mehrdad.freenews.domain.usecase
 
-import com.mehrdad.freenews.data.model.Article
+import com.mehrdad.freenews.data.model.remote.Article
 import com.mehrdad.freenews.data.repository.NewsRepository
 
 class GetNewsForCountry(
