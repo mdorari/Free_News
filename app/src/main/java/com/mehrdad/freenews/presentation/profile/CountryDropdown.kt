@@ -21,75 +21,77 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mehrdad.freenews.data.model.Country
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryDropdown(
     modifier: Modifier = Modifier,
 //    selectedCountry: String,
-    onCountrySelected: (String) -> Unit
+    onCountrySelected: (Country) -> Unit
 ) {
-    val countries = listOf(
-        "United Arab Emirates",
-        "Argentina",
-        "Austria",
-        "Australia",
-        "Belgium",
-        "Brazil",
-        "Canada",
-        "Switzerland",
-        "Chile",
-        "China",
-        "Colombia",
-        "Costa Rica",
-        "Czech Republic",
-        "Germany",
-        "Egypt",
-        "Spain",
-        "France",
-        "United Kingdom",
-        "Greece",
-        "Hong Kong",
-        "Hungary",
-        "Indonesia",
-        "Ireland",
-        "Israel",
-        "India",
-        "Italy",
-        "Japan",
-        "South Korea",
-        "Lithuania",
-        "Latvia",
-        "Macau",
-        "Mexico",
-        "Malaysia",
-        "Nigeria",
-        "Netherlands",
-        "Norway",
-        "New Zealand",
-        "Philippines",
-        "Poland",
-        "Portugal",
-        "Romania",
-        "Russia",
-        "Saudi Arabia",
-        "Sweden",
-        "Singapore",
-        "Slovenia",
-        "Slovakia",
-        "Thailand",
-        "Turkey",
-        "Taiwan",
-        "Ukraine",
-        "United States",
-        "Venezuela",
-        "South Africa"
-    )
+    val countries = Country.listOfCountries
+//        listOf(
+//        "United Arab Emirates",
+//        "Argentina",
+//        "Austria",
+//        "Australia",
+//        "Belgium",
+//        "Brazil",
+//        "Canada",
+//        "Switzerland",
+//        "Chile",
+//        "China",
+//        "Colombia",
+//        "Costa Rica",
+//        "Czech Republic",
+//        "Germany",
+//        "Egypt",
+//        "Spain",
+//        "France",
+//        "United Kingdom",
+//        "Greece",
+//        "Hong Kong",
+//        "Hungary",
+//        "Indonesia",
+//        "Ireland",
+//        "Israel",
+//        "India",
+//        "Italy",
+//        "Japan",
+//        "South Korea",
+//        "Lithuania",
+//        "Latvia",
+//        "Macau",
+//        "Mexico",
+//        "Malaysia",
+//        "Nigeria",
+//        "Netherlands",
+//        "Norway",
+//        "New Zealand",
+//        "Philippines",
+//        "Poland",
+//        "Portugal",
+//        "Romania",
+//        "Russia",
+//        "Saudi Arabia",
+//        "Sweden",
+//        "Singapore",
+//        "Slovenia",
+//        "Slovakia",
+//        "Thailand",
+//        "Turkey",
+//        "Taiwan",
+//        "Ukraine",
+//        "United States",
+//        "Venezuela",
+//        "South Africa"
+//    )
 
     var expanded by remember {
         mutableStateOf(false)
     }
-    var selectedCountryText by remember { mutableStateOf(countries[0]) }
+    var selectedCountryText by remember { mutableStateOf(countries[0].name) }
 
     ExposedDropdownMenuBox(
         modifier = Modifier.fillMaxWidth(),
@@ -109,11 +111,11 @@ fun CountryDropdown(
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }) {
-            countries.forEachIndexed { index, text ->
+            countries.forEachIndexed { index, country ->
                 DropdownMenuItem(
-                    text = { Text(text = text) },
+                    text = { Text(text = country.name) },
                     onClick = {
-                        selectedCountryText = countries[index]
+                        selectedCountryText = countries[index].name
                         onCountrySelected(countries[index])
                         expanded = false
                     })

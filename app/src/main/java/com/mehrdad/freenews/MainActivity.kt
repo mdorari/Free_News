@@ -42,6 +42,7 @@ import com.mehrdad.freenews.presentation.article.ArticleScreen
 import com.mehrdad.freenews.presentation.home.HomeScreen
 import com.mehrdad.freenews.presentation.home.HomeViewModel
 import com.mehrdad.freenews.presentation.profile.ProfileScreen
+import com.mehrdad.freenews.presentation.profile.ProfileViewModel
 import com.mehrdad.freenews.ui.theme.FreeNewsTheme
 import com.mehrdad.freenews.ui.theme.Primary
 import com.mehrdad.freenews.ui.theme.Secondary
@@ -140,7 +141,10 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Route.PROFILE) {
-                                ProfileScreen(navController = navController)
+                                val viewModel:ProfileViewModel = hiltViewModel()
+                                ProfileScreen(navController = navController, event = {event->
+                                    viewModel::onEvent
+                                })
                             }
                             composable(Route.ARTICLE) {
                                 navController.previousBackStackEntry?.savedStateHandle?.get<Article?>(

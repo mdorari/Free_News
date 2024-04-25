@@ -6,6 +6,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id ("kotlin-parcelize")
+//    id("com.google.devtools.ksp")
 
 
 }
@@ -82,9 +83,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation ("io.coil-kt:coil-compose:2.5.0")
-
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-
     implementation ("androidx.navigation:navigation-compose:2.7.7")
 
     //Retrofit Library
@@ -99,6 +98,21 @@ dependencies {
     implementation ("androidx.room:room-ktx:2.6.1")
 
 
+    //Room
+    val room_version = "2.6.1"
+    implementation ("androidx.room:room-runtime:$room_version")
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+//    // To use Kotlin Symbol Processing (KSP)
+//    ksp("androidx.room:room-compiler:$room_version")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation ("androidx.room:room-ktx:$room_version")
+
+
+    //Datastore
+    implementation ("androidx.datastore:datastore-preferences:1.1.0")
+
+
     //Dagger Hilt Library
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -106,9 +120,4 @@ dependencies {
     kapt ("androidx.hilt:hilt-compiler:1.2.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-}
-
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
 }

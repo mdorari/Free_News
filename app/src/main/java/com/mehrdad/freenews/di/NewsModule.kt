@@ -1,10 +1,12 @@
 package com.mehrdad.freenews.di
 
+import android.app.Application
 import com.mehrdad.freenews.data.api.NewsApi
 import com.mehrdad.freenews.data.repository.NewsRepository
 import com.mehrdad.freenews.data.repository.NewsRepositoryImpl
 import com.mehrdad.freenews.domain.usecase.GetNewsForCountry
 import com.mehrdad.freenews.domain.usecase.NewsUseCases
+import com.mehrdad.freenews.domain.usecase.SelectCountry
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,11 +61,13 @@ object NewsModule {
     @Singleton
     fun provideNewsRepository(
         api: NewsApi,
+        application: Application
 //        db:NewsDatabase
     ): NewsRepository {
         return NewsRepositoryImpl(
 //            dao = db.dao,
-            api = api
+            api = api,
+            context = application
         )
     }
 
@@ -73,7 +77,8 @@ object NewsModule {
         repository: NewsRepository
     ):NewsUseCases{
         return NewsUseCases(
-            getNewsForCountry = GetNewsForCountry(repository)
+            getNewsForCountry = GetNewsForCountry(repository),
+            selectCountry = SelectCountry(repository)
         )
     }
 }
