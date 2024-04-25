@@ -1,5 +1,6 @@
 package com.mehrdad.freenews.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mehrdad.freenews.R
 import com.mehrdad.freenews.data.model.Filter
+import com.mehrdad.freenews.data.model.remote.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.presentation.UiEvent
 import com.mehrdad.freenews.presentation.components.FilterButton
@@ -38,7 +40,8 @@ import com.mehrdad.freenews.ui.theme.Tertiary
 fun HomeScreen(
 //    onNavigateUp:()->Unit,
     viewModel: HomeViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    navigateToDetails: (Article) -> Unit,
 ) {
     val spacing = LocalSpacing.current
     val state = viewModel.state
@@ -99,7 +102,8 @@ fun HomeScreen(
                 fontWeight = FontWeight.Bold,
                 letterSpacing = (-0.5).sp
             )
-            NewsCard(article = state.bannerNews)
+            NewsCard(article = state.bannerNews,
+                onClick = {navigateToDetails(state.bannerNews)})
             Text(
                 modifier = Modifier.padding(spacing.spaceMedium),
                 text = "Other News:",
@@ -115,7 +119,9 @@ fun HomeScreen(
                     .height(220.dp)
             ) {
                 items(otherNews) { item ->
-                    OtherNews(item)
+                    OtherNews(
+                        onClick = {navigateToDetails(item)},
+                        article = item)
                 }
             }
         }

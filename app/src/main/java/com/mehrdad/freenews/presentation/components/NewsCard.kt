@@ -1,6 +1,7 @@
 package com.mehrdad.freenews.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,25 +31,25 @@ import com.mehrdad.freenews.ui.theme.Primary
 
 @Composable
 fun NewsCard(
-    article: Article
+    article: Article,
+    onClick: (Article) -> Unit
 ) {
     val spacing = LocalSpacing.current
 
 //    val sampleImage =
 //        "https://images6.alphacoders.com/488/thumb-1920-488158.jpg"
-    Column(modifier = Modifier.padding(spacing.spaceMedium)) {
+    Column(modifier = Modifier.padding(spacing.spaceMedium).clickable { onClick(article) }) {
         Box() {
             Image(
                 modifier = Modifier.clip(RoundedCornerShape(spacing.spaceSemiLarge)),
-//                painter = painterResource(id = R.drawable.sample_image),
 
-            painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(article.urlToImage)
-                    .size(coil.size.Size.ORIGINAL)
-                    .crossfade(true)
-                    .build()
-            ),
+                painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(article.urlToImage)
+                        .size(coil.size.Size.ORIGINAL)
+                        .crossfade(true)
+                        .build()
+                ),
                 contentDescription = article.description
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -57,17 +58,8 @@ fun NewsCard(
                         .padding(spacing.spaceSemiMedium)
                         .width(40.dp)
                         .aspectRatio(1f)
-                        .clip(RoundedCornerShape(spacing.spaceXXLarge))
-                    ,
+                        .clip(RoundedCornerShape(spacing.spaceXXLarge)),
                     painter = painterResource(id = R.drawable.news_agency_icon),
-
-//            painter = rememberAsyncImagePainter(
-//                model = ImageRequest.Builder(LocalContext.current)
-//                    .data(sampleImage)
-//                    .size(coil.size.Size.ORIGINAL)
-//                    .crossfade(true)
-//                    .build()
-//            ),
                     contentDescription = ""
                 )
                 Text(
@@ -90,7 +82,6 @@ fun NewsCard(
                 letterSpacing = (-1).sp,
                 fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght))
             )
-
 
 
             /*
@@ -120,7 +111,7 @@ fun NewsCard(
         Text(
             modifier = Modifier
                 .padding(top = spacing.spaceSemiMedium),
-            text = article.title,
+            text = article.title ?: "No title",
             color = Primary,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),

@@ -1,6 +1,7 @@
 package com.mehrdad.freenews.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,15 +32,16 @@ import com.mehrdad.freenews.ui.theme.Secondary
 
 @Composable
 fun OtherNews(
-//    modifier: Modifier = Modifier,
-    article: Article
+    article: Article,
+    onClick: (Article) -> Unit
 ) {
     val spacing = LocalSpacing.current
         Column(
             modifier = Modifier
                 .width(200.dp)
                 .fillMaxHeight()
-                .padding(spacing.spaceSmall),
+                .padding(spacing.spaceSmall)
+                .clickable { onClick(article) },
             horizontalAlignment = Alignment.Start
         ) {
             Image(
@@ -58,7 +60,7 @@ fun OtherNews(
                 contentDescription = article.description
             )
             Text(
-                text = article.title,
+                text = article.title?: "no title",
                 fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,

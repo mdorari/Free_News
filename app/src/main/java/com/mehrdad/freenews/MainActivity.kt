@@ -30,12 +30,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mehrdad.freenews.data.model.remote.Article
 import com.mehrdad.freenews.domain.BottomNavigationItem
-import com.mehrdad.freenews.navigation.Route
+import com.mehrdad.freenews.presentation.navigation.Route
 import com.mehrdad.freenews.presentation.LocalSpacing
+import com.mehrdad.freenews.presentation.article.ArticleScreen
 import com.mehrdad.freenews.presentation.home.HomeScreen
 import com.mehrdad.freenews.presentation.home.HomeViewModel
 import com.mehrdad.freenews.presentation.profile.ProfileScreen
@@ -123,19 +126,41 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             modifier = Modifier.padding(it),
                             navController = navController,
-                            startDestination = Route.HOME){
-                            composable(Route.HOME){
+                            startDestination = Route.HOME
+                        ) {
+                            composable(Route.HOME) {
                                 HomeScreen(
-                                    navController = navController
+                                    navController = navController,
+                                    navigateToDetails = { article ->
+                                        navigateToDetails(
+                                            navController = navController,
+                                            article = article
+                                        )
+                                    }
                                 )
                             }
-                            composable(Route.PROFILE){
+                            composable(Route.PROFILE) {
                                 ProfileScreen(navController = navController)
+                            }
+                            composable(Route.ARTICLE) {
+                                navController.previousBackStackEntry?.savedStateHandle?.get<Article?>(
+                                    "article"
+                                )
+                                    ?.let { article ->
+                                        ArticleScreen(article = article)
+                                    }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun navigateToDetails(navController: NavController, article: Article) {
+        navController.currentBackStackEntry?.savedStateHandle?.set("article", article)
+        navController.navigate(
+            route = Route.ARTICLE
+        )
     }
 }
