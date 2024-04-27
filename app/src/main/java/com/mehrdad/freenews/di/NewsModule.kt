@@ -4,19 +4,18 @@ import android.app.Application
 import com.mehrdad.freenews.data.api.NewsApi
 import com.mehrdad.freenews.data.repository.NewsRepository
 import com.mehrdad.freenews.data.repository.NewsRepositoryImpl
+import com.mehrdad.freenews.domain.usecase.GetCountry
 import com.mehrdad.freenews.domain.usecase.GetNewsForCountry
 import com.mehrdad.freenews.domain.usecase.NewsUseCases
-import com.mehrdad.freenews.domain.usecase.SelectCountry
+import com.mehrdad.freenews.domain.usecase.SetCountry
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -78,7 +77,8 @@ object NewsModule {
     ):NewsUseCases{
         return NewsUseCases(
             getNewsForCountry = GetNewsForCountry(repository),
-            selectCountry = SelectCountry(repository)
+//            setCountry = SetCountry(repository),
+//            getCountry = GetCountry(repository)
         )
     }
 }

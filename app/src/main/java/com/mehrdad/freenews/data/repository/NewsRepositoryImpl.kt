@@ -3,6 +3,7 @@ package com.mehrdad.freenews.data.repository
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mehrdad.freenews.data.api.NewsApi
@@ -18,11 +19,12 @@ class NewsRepositoryImpl(
 //    private val dao:NewsDao,
     private val api: NewsApi,
     private val context: Context
-):NewsRepository {
+) : NewsRepository {
     override suspend fun getHeadlineForCountry(
         country: String,
-        apiKey: String)
-    : Result<List<Article>> {
+        apiKey: String
+    )
+            : Result<List<Article>> {
         return try {
             val newsDto = api.getHeadlinesForCountry(
                 country = country,
@@ -31,22 +33,28 @@ class NewsRepositoryImpl(
             Result.success(
                 newsDto.articles
             )
-        } catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)
         }
     }
 
-    override  fun changeCounty(country: Country): Flow<String> {
-        return context.dataStore.data.map { preferences->
-            preferences[PreferencesKeys.COUNTRY_NAME] ?: "us"
-        }
-    }
+//    override suspend fun setCounty(country: Country): Preferences {
+//        return context.dataStore.edit { preferences ->
+//            preferences[PreferencesKeys.COUNTRY_NAME] = country
+//        }
+//    }
+//
+//    override fun getCountry(): Flow<Country> {
+//        return context.dataStore.data.map { preferences ->
+//            preferences[PreferencesKeys.COUNTRY_NAME] ?: "us"
+//        }
+//    }
 
 }
 
-private val Context.dataStore:DataStore<Preferences> by preferencesDataStore(name = USER_SETTINGS)
-
-private object PreferencesKeys{
-    val COUNTRY_NAME = stringPreferencesKey(name = Constants.COUNTRY_NAME)
-}
+//private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_SETTINGS)
+//
+//private object PreferencesKeys {
+//    val COUNTRY_NAME = stringPreferencesKey(name = Constants.COUNTRY_NAME)
+//}

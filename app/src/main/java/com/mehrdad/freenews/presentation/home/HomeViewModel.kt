@@ -1,9 +1,13 @@
 package com.mehrdad.freenews.presentation.home
 
+import android.util.Log
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mehrdad.freenews.data.api.NewsApi.Companion.API_KEY
@@ -12,6 +16,7 @@ import com.mehrdad.freenews.presentation.UiEvent
 import com.mehrdad.freenews.presentation.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,9 +30,9 @@ class HomeViewModel @Inject constructor(
     var state by mutableStateOf(HomeState())
         private set
 
-
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
 
     init {
         getNews()
@@ -47,13 +52,19 @@ class HomeViewModel @Inject constructor(
 
     private fun getNews() {
         viewModelScope.launch {
+
+
+//            val selectedCountry = newsUseCases.getCountry.invoke().first()
+//            Log.d("Mehrdad country in HomeViewModel", "getNews: $selectedCountry")
+
             state = state.copy(
                 isRefreshing = true,
-                articles = emptyList()
+                articles = emptyList(),
+//                country = selectedCountry
             )
             newsUseCases
                 .getNewsForCountry(
-                    country = state.country,
+                    country = state.country.initials,
                     apiKey = API_KEY
                 )
                 .onSuccess { articles ->

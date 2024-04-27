@@ -21,7 +21,11 @@ fun ProfileScreen(
         Text(text = viewModel.state.selectedCountry.name)
         CountryDropdown(
             modifier = Modifier.fillMaxWidth(),
-            onCountrySelected = { event(ProfileEvent.UpdateSelectedCountry(Country(it.name,it.initials))) }
+            onCountrySelected = {
+                viewModel.onEvent(ProfileEvent.UpdateSelectedCountry(it))
+
+//                event(ProfileEvent.UpdateSelectedCountry(Country(it.name,it.initials)))
+            }
 //        selectedCountry = selectedCountry
         )
     }
