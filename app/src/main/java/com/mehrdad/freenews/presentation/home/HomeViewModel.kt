@@ -1,6 +1,5 @@
 package com.mehrdad.freenews.presentation.home
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -103,7 +102,6 @@ class HomeViewModel @Inject constructor(
                                 ?: "https://demofree.sirv.com/nope-not-here.jpg?w=150"
                         )
                     }
-                    Log.d("Mehrdad filtered articles", "getNews: $mappedArticle")
                     state = state.copy(
                         bannerNews = mappedArticle.first(),
                         articlesByCategory = mappedArticle.drop(1),
@@ -157,9 +155,7 @@ class HomeViewModel @Inject constructor(
                                 ?: "https://demofree.sirv.com/nope-not-here.jpg?w=150"
                         )
                     }
-                    Log.d("Mehrdad filtered articles", "getNews: $mappedArticle")
                     state = state.copy(
-                        bannerNews = mappedArticle.first(),
                         articles = mappedArticle.drop(1),
                         isRefreshing = false
                     )

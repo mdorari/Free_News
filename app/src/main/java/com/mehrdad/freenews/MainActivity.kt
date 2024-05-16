@@ -3,23 +3,23 @@ package com.mehrdad.freenews
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,23 +35,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mehrdad.freenews.data.remote.model.remote.Article
 import com.mehrdad.freenews.domain.BottomNavigationItem
-import com.mehrdad.freenews.presentation.navigation.Route
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.presentation.article.ArticleScreen
 import com.mehrdad.freenews.presentation.home.HomeScreen
-import com.mehrdad.freenews.presentation.home.HomeViewModel
+import com.mehrdad.freenews.presentation.navigation.Route
 import com.mehrdad.freenews.presentation.profile.ProfileScreen
 import com.mehrdad.freenews.presentation.profile.ProfileViewModel
 import com.mehrdad.freenews.ui.theme.FreeNewsTheme
-import com.mehrdad.freenews.ui.theme.Primary
 import com.mehrdad.freenews.ui.theme.Secondary
 import com.mehrdad.freenews.ui.theme.Tertiary
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,11 +59,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
-//                    val viewModel = hiltViewModel<HomeViewModel>()
-//                    val state = viewModel.state
                     val spacing = LocalSpacing.current
                     var selectedItemIndex by rememberSaveable {
                         mutableIntStateOf(0)
+                    }
+                    var shouldShowTopBar by rememberSaveable {
+                        mutableStateOf(false)
                     }
                     val navigationItem = BottomNavigationItem.navbarItems
                     val navController = rememberNavController()
@@ -75,12 +73,26 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize(),
                         topBar = {
-                            Spacer(
-                                modifier = Modifier
-                                    .height(spacing.spaceXXLarge)
-                                    .fillMaxWidth()
-                                    .background(Primary)
-                            )
+                            if (shouldShowTopBar) {
+                                TopAppBar(
+                                    title = { },
+                                    navigationIcon = {
+                                        IconButton(
+                                            onClick = { navController.navigateUp() }) {
+                                            Icon(
+                                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                                contentDescription = "back"
+                                            )
+                                        }
+                                    }
+                                )
+                            }
+//                            Spacer(
+//                                modifier = Modifier
+//                                    .height(spacing.spaceXXLarge)
+//                                    .fillMaxWidth()
+//                                    .background(Primary)
+//                            )
                         },
                         bottomBar = {
                             NavigationBar(containerColor = Color.White) {
@@ -91,8 +103,25 @@ class MainActivity : ComponentActivity() {
                                         ),
                                         selected = selectedItemIndex == index,
                                         onClick = {
-                                            selectedItemIndex = index
-                                            navController.navigate(item.route)
+                                            if (selectedItemIndex != index) {
+                                                selectedItemIndex = index
+
+                                                navController.popBackStack()
+                                                navController.navigate(item.route)
+
+//                                                navController.navigate(item.route) {
+//                                                    // Pop up to the start destination of the navigation graph
+//                                                    popUpTo(navController.graph.startDestinationId) {
+//                                                        // Inclusive of the start destination
+//                                                        inclusive = true
+//                                                    }
+//                                                    // Avoid multiple copies of the same destination when reselecting the same item
+//                                                    launchSingleTop = true
+//                                                    // Restore state when navigating back to a previously visited destination
+//                                                    restoreState = true
+//                                                }
+//                                                navController.popBackStack()
+                                            }
                                         },
                                         label = {
                                             Text(
@@ -130,6 +159,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = Route.HOME
                         ) {
                             composable(Route.HOME) {
+                                shouldShowTopBar = false
                                 HomeScreen(
                                     navController = navController,
                                     navigateToDetails = { article ->
@@ -141,12 +171,14 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Route.PROFILE) {
-                                val viewModel:ProfileViewModel = hiltViewModel()
-                                ProfileScreen(navController = navController, event = {event->
+                                shouldShowTopBar = false
+                                val viewModel: ProfileViewModel = hiltViewModel()
+                                ProfileScreen(navController = navController, event = { event ->
                                     viewModel::onEvent
                                 })
                             }
                             composable(Route.ARTICLE) {
+                                shouldShowTopBar = true
                                 navController.previousBackStackEntry?.savedStateHandle?.get<Article?>(
                                     "article"
                                 )
