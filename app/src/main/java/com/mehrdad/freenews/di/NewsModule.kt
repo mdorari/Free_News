@@ -9,6 +9,7 @@ import com.mehrdad.freenews.data.repository.NewsRepository
 import com.mehrdad.freenews.data.repository.NewsRepositoryImpl
 import com.mehrdad.freenews.domain.usecase.GetCountryByInitials
 import com.mehrdad.freenews.domain.usecase.GetNewsForCountry
+import com.mehrdad.freenews.domain.usecase.GetNewsForCountryByCategory
 import com.mehrdad.freenews.domain.usecase.NewsUseCases
 import com.mehrdad.freenews.domain.usecase.ReadUserSettings
 import com.mehrdad.freenews.domain.usecase.UpsertUserSettings
@@ -87,7 +88,8 @@ object NewsModule {
             getNewsForCountry = GetNewsForCountry(repository),
             readUserSettings = ReadUserSettings(repository),
             upsertUserSettings = UpsertUserSettings(repository),
-            getCountryByInitials = GetCountryByInitials(repository)
+            getCountryByInitials = GetCountryByInitials(repository),
+            getNewsForCountryByCategory = GetNewsForCountryByCategory(repository)
         )
     }
 }
