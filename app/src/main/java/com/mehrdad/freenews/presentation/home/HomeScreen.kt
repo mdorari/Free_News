@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mehrdad.freenews.R
-import com.mehrdad.freenews.data.model.Filter
-import com.mehrdad.freenews.data.model.remote.Article
+import com.mehrdad.freenews.data.remote.model.Filter
+import com.mehrdad.freenews.data.remote.model.remote.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.presentation.UiEvent
 import com.mehrdad.freenews.presentation.components.FilterButton

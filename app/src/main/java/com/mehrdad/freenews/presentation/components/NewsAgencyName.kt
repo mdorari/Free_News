@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mehrdad.freenews.R
-import com.mehrdad.freenews.data.model.remote.Article
-import com.mehrdad.freenews.data.model.remote.Source
+import com.mehrdad.freenews.data.remote.model.remote.Article
+import com.mehrdad.freenews.data.remote.model.remote.Source
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.ui.theme.Primary
 

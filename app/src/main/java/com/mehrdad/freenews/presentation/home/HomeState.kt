@@ -1,8 +1,8 @@
 package com.mehrdad.freenews.presentation.home
 
-import com.mehrdad.freenews.data.model.Country
-import com.mehrdad.freenews.data.model.remote.Article
-import com.mehrdad.freenews.data.model.remote.Source
+import com.mehrdad.freenews.data.remote.model.Country
+import com.mehrdad.freenews.data.remote.model.remote.Article
+import com.mehrdad.freenews.data.remote.model.remote.Source
 
 data class HomeState (
     val country : Country = Country(name = "USA", initials = "us"),

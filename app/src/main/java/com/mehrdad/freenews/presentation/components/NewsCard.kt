@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.mehrdad.freenews.R
-import com.mehrdad.freenews.data.model.remote.Article
+import com.mehrdad.freenews.data.remote.model.remote.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.ui.theme.Primary
 

@@ -1,7 +1,7 @@
-package com.mehrdad.freenews.data.api
+package com.mehrdad.freenews.data.remote.api
 
 import com.mehrdad.freenews.BuildConfig
-import com.mehrdad.freenews.data.model.remote.Headlines
+import com.mehrdad.freenews.data.remote.model.remote.Headlines
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -10,7 +10,7 @@ import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mehrdad.freenews.data.api.NewsApi.Companion.API_KEY
+import com.mehrdad.freenews.data.remote.api.NewsApi.Companion.API_KEY
 import com.mehrdad.freenews.domain.usecase.NewsUseCases
 import com.mehrdad.freenews.presentation.UiEvent
 import com.mehrdad.freenews.presentation.UiText

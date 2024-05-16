@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mehrdad.freenews.data.model.Country
+import com.mehrdad.freenews.data.remote.model.Country
 
 @Composable
 fun ProfileScreen(
@@ -15,18 +15,17 @@ fun ProfileScreen(
     event: (ProfileEvent) -> Unit,
     navController: NavController
 ) {
-//    var selectedCountry by remember { mutableStateOf("Select Country")}
 
     Column(Modifier.fillMaxWidth()) {
         Text(text = viewModel.state.selectedCountry.name)
         CountryDropdown(
             modifier = Modifier.fillMaxWidth(),
+            countries = viewModel.state.countries,
+            selectedCountryIndex = viewModel.state.selectedCountryIndex,
+            selectedCountryName = viewModel.state.selectedCountry.name,
             onCountrySelected = {
                 viewModel.onEvent(ProfileEvent.UpdateSelectedCountry(it))
-
-//                event(ProfileEvent.UpdateSelectedCountry(Country(it.name,it.initials)))
             }
-//        selectedCountry = selectedCountry
         )
     }
 }

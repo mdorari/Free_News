@@ -1,4 +1,4 @@
-package com.mehrdad.freenews.data.model.remote
+package com.mehrdad.freenews.data.remote.model.remote
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

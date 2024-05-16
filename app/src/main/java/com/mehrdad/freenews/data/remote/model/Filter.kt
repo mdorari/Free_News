@@ -1,4 +1,4 @@
-package com.mehrdad.freenews.data.model
+package com.mehrdad.freenews.data.remote.model
 
 data class Filter(
     val text: String,

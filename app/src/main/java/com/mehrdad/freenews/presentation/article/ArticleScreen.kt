@@ -23,7 +23,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import com.mehrdad.freenews.R
-import com.mehrdad.freenews.data.model.remote.Article
+import com.mehrdad.freenews.data.remote.model.remote.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.presentation.components.NewsAgencyName
 import com.mehrdad.freenews.ui.theme.Primary

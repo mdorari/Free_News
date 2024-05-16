@@ -1,24 +1,17 @@
 package com.mehrdad.freenews.data.repository
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import com.mehrdad.freenews.data.api.NewsApi
-import com.mehrdad.freenews.data.model.Country
-import com.mehrdad.freenews.data.model.remote.Article
-import com.mehrdad.freenews.util.Constants
-import com.mehrdad.freenews.util.Constants.USER_SETTINGS
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import java.lang.Exception
+import com.mehrdad.freenews.data.local.NewsDao
+import com.mehrdad.freenews.data.local.UserSettings
+import com.mehrdad.freenews.data.local.defaultCountries
+import com.mehrdad.freenews.data.remote.api.NewsApi
+import com.mehrdad.freenews.data.remote.model.Country
+import com.mehrdad.freenews.data.remote.model.remote.Article
+import javax.inject.Inject
 
-class NewsRepositoryImpl(
-//    private val dao:NewsDao,
+class NewsRepositoryImpl @Inject constructor(
+    private val dao: NewsDao,
     private val api: NewsApi,
-    private val context: Context
+//    private val context: Context
 ) : NewsRepository {
     override suspend fun getHeadlineForCountry(
         country: String,
@@ -38,6 +31,22 @@ class NewsRepositoryImpl(
             Result.failure(e)
         }
     }
+
+    override suspend fun upsertUserSettings(userSettings: UserSettings) {
+        dao.upsertUserSettings(userSettings)
+    }
+
+    override suspend fun readUserSettings(userId:Int): List<UserSettings> {
+        return dao.getUserSettings(userId = userId)
+    }
+
+    override suspend fun getCountryByInitials(initials: String): Country {
+        return defaultCountries.first { it.initials == initials }
+    }
+
+//    override fun getCountries(): List<Country> {
+//        return dao.getCountries()
+//    }
 
 //    override suspend fun setCounty(country: Country): Preferences {
 //        return context.dataStore.edit { preferences ->
