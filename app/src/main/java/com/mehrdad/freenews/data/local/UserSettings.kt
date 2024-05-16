@@ -2,7 +2,6 @@ package com.mehrdad.freenews.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mehrdad.freenews.data.remote.model.Country
 
 @Entity
 data class UserSettings(

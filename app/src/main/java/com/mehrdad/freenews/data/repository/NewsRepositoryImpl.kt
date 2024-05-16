@@ -36,34 +36,11 @@ class NewsRepositoryImpl @Inject constructor(
         dao.upsertUserSettings(userSettings)
     }
 
-    override suspend fun readUserSettings(userId:Int): List<UserSettings> {
+    override suspend fun readUserSettings(userId: Int): List<UserSettings> {
         return dao.getUserSettings(userId = userId)
     }
 
     override suspend fun getCountryByInitials(initials: String): Country {
         return defaultCountries.first { it.initials == initials }
     }
-
-//    override fun getCountries(): List<Country> {
-//        return dao.getCountries()
-//    }
-
-//    override suspend fun setCounty(country: Country): Preferences {
-//        return context.dataStore.edit { preferences ->
-//            preferences[PreferencesKeys.COUNTRY_NAME] = country
-//        }
-//    }
-//
-//    override fun getCountry(): Flow<Country> {
-//        return context.dataStore.data.map { preferences ->
-//            preferences[PreferencesKeys.COUNTRY_NAME] ?: "us"
-//        }
-//    }
-
 }
-
-//private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_SETTINGS)
-//
-//private object PreferencesKeys {
-//    val COUNTRY_NAME = stringPreferencesKey(name = Constants.COUNTRY_NAME)
-//}

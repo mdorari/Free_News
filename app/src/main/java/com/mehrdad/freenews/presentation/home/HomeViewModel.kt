@@ -1,22 +1,19 @@
 package com.mehrdad.freenews.presentation.home
 
 import android.util.Log
-import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mehrdad.freenews.data.remote.api.NewsApi.Companion.API_KEY
+import com.mehrdad.freenews.data.remote.model.remote.Article
+import com.mehrdad.freenews.data.remote.model.remote.Source
 import com.mehrdad.freenews.domain.usecase.NewsUseCases
 import com.mehrdad.freenews.presentation.UiEvent
 import com.mehrdad.freenews.presentation.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,15 +49,13 @@ class HomeViewModel @Inject constructor(
 
     private fun getNews() {
         viewModelScope.launch {
-
-
-//            val selectedCountry = newsUseCases.getCountry.invoke().first()
-//            Log.d("Mehrdad country in HomeViewModel", "getNews: $selectedCountry")
-
+            val selectedCountryInitials =
+                newsUseCases.readUserSettings(1).first().selectedCountryInitial
+            val selectedCountry = newsUseCases.getCountryByInitials(selectedCountryInitials)
             state = state.copy(
                 isRefreshing = true,
                 articles = emptyList(),
-//                country = selectedCountry
+                country = selectedCountry
             )
             newsUseCases
                 .getNewsForCountry(
@@ -68,13 +63,26 @@ class HomeViewModel @Inject constructor(
                     apiKey = API_KEY
                 )
                 .onSuccess { articles ->
-                    val filteredArticles = articles.filter { article ->
-                        article.source.id != null
-                        article.urlToImage != null
+                    val mappedArtilelist = articles.map { article ->
+                        Article(
+                            author = article.author,
+                            content = article.content,
+                            description = article.description,
+                            publishedAt = article.publishedAt,
+                            source = Source(
+                                id = article.source.id ?: "unknown source",
+                                name = article.source.name ?: "unknown source"
+                            ),
+                            title = article.title,
+                            url = article.url,
+                            urlToImage = article.urlToImage
+                                ?: "https://demofree.sirv.com/nope-not-here.jpg?w=150"
+                        )
                     }
+                    Log.d("Mehrdad filtered articles", "getNews: $mappedArtilelist")
                     state = state.copy(
-                        bannerNews = filteredArticles.first(),
-                        articles = filteredArticles.drop(1),
+                        bannerNews = mappedArtilelist.first(),
+                        articles = mappedArtilelist.drop(1),
                         isRefreshing = false
                     )
                 }

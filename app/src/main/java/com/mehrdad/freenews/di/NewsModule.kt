@@ -58,7 +58,6 @@ object NewsModule {
             klass = NewsDatabase::class.java,
             name = "news_db"
         ).build()
-//        .createFromAsset("database/userSettingsDB.db")
     }
 
     @Provides
@@ -89,8 +88,6 @@ object NewsModule {
             readUserSettings = ReadUserSettings(repository),
             upsertUserSettings = UpsertUserSettings(repository),
             getCountryByInitials = GetCountryByInitials(repository)
-//            setCountry = SetCountry(repository),
-//            getCountry = GetCountry(repository)
         )
     }
 }

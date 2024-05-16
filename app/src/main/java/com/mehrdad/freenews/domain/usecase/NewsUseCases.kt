@@ -5,6 +5,4 @@ data class NewsUseCases(
     val readUserSettings: ReadUserSettings,
     val upsertUserSettings:UpsertUserSettings,
     val getCountryByInitials: GetCountryByInitials
-//    val setCountry: SetCountry,
-//    val getCountry: GetCountry
 )
