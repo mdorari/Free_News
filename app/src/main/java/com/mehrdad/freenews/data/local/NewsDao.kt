@@ -15,9 +15,4 @@ interface NewsDao {
     @Query("SELECT * FROM UserSettings WHERE userId = :userId")
     suspend fun getUserSettings(userId:Int): List<UserSettings>
 
-//    @Query("SELECT * FROM Country WHERE initials = :countryInitials")
-//    suspend fun getCountryByCountryInitials(countryInitials:String):Country
-
-//    @Query("SELECT * FROM Country")
-//    fun getCountries():List<Country>
 }
