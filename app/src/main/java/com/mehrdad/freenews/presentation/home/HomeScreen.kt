@@ -1,9 +1,7 @@
 package com.mehrdad.freenews.presentation.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +14,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mehrdad.freenews.R
-import com.mehrdad.freenews.data.remote.model.Filter
 import com.mehrdad.freenews.data.remote.model.remote.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
 import com.mehrdad.freenews.presentation.UiEvent
@@ -38,7 +39,6 @@ import com.mehrdad.freenews.ui.theme.Tertiary
 
 @Composable
 fun HomeScreen(
-//    onNavigateUp:()->Unit,
     viewModel: HomeViewModel = hiltViewModel(),
     navController: NavController,
     navigateToDetails: (Article) -> Unit,
@@ -46,6 +46,9 @@ fun HomeScreen(
     val spacing = LocalSpacing.current
     val state = viewModel.state
     val context = LocalContext.current
+    var selectedFilterIndex by remember {
+        mutableIntStateOf(0)
+    }
 
     LaunchedEffect(true) {
         viewModel.uiEvent.collect { event ->
@@ -61,12 +64,9 @@ fun HomeScreen(
         }
     }
 
-    val filterItems = listOf<Filter>(
-        Filter("General", true),
-        Filter("Health", false),
-        Filter("Finance", false),
-    )
+    val filterItems = state.filterList
     val otherNews = state.articles
+    val newsByCategory = state.articlesByCategory
     Column(
         modifier = Modifier
 //            .padding(paddingValues)
@@ -82,17 +82,6 @@ fun HomeScreen(
                 CircularProgressIndicator()
             }
         } else {
-            LazyRow(
-                modifier = Modifier.padding(vertical = spacing.spaceMedium),
-            ) {
-                items(filterItems) { filter ->
-                    FilterButton(
-                        modifier = Modifier.padding(horizontal = spacing.spaceSmall),
-                        text = filter.text,
-                        isSelected = filter.isSelected,
-                        onClick = {})
-                }
-            }
             Text(
                 modifier = Modifier.padding(spacing.spaceMedium),
                 text = "Now!",
@@ -119,6 +108,34 @@ fun HomeScreen(
                     .height(220.dp)
             ) {
                 items(otherNews) { item ->
+                    OtherNews(
+                        onClick = {navigateToDetails(item)},
+                        article = item)
+                }
+            }
+            LazyRow(
+                modifier = Modifier.padding(vertical = spacing.spaceMedium),
+            ) {
+                item {
+                    filterItems.forEachIndexed { index, filter ->
+                        FilterButton(
+                            modifier = Modifier.padding(horizontal = spacing.spaceSmall),
+                            text = filter.text,
+                            isSelected = selectedFilterIndex == index,
+                            onFilterSelected = {
+                                selectedFilterIndex = 0
+                                viewModel.onEvent(HomeEvent.OnFilterClick(filter))
+                            })
+
+                    }
+                }
+            }
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+            ) {
+                items(newsByCategory) { item ->
                     OtherNews(
                         onClick = {navigateToDetails(item)},
                         article = item)

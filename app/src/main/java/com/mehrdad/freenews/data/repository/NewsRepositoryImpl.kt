@@ -16,12 +16,31 @@ class NewsRepositoryImpl @Inject constructor(
     override suspend fun getHeadlineForCountry(
         country: String,
         apiKey: String
-    )
-            : Result<List<Article>> {
+    ): Result<List<Article>> {
         return try {
             val newsDto = api.getHeadlinesForCountry(
                 country = country,
                 apiKey = apiKey
+            )
+            Result.success(
+                newsDto.articles
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getHeadlinesForCountryAndCategory(
+        country: String,
+        apiKey: String,
+        category: String
+    ): Result<List<Article>> {
+        return try {
+            val newsDto = api.getHeadlinesForCountryAndCategory(
+                country = country,
+                apiKey = apiKey,
+                category = category
             )
             Result.success(
                 newsDto.articles

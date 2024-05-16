@@ -8,10 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mehrdad.freenews.data.local.UserSettings
 import com.mehrdad.freenews.data.local.defaultCountries
-import com.mehrdad.freenews.data.repository.NewsRepository
 import com.mehrdad.freenews.domain.usecase.NewsUseCases
 import com.mehrdad.freenews.presentation.UiEvent
-import com.mehrdad.freenews.presentation.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -20,14 +18,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val newsUseCases: NewsUseCases,
-    private val repository: NewsRepository
+    private val newsUseCases: NewsUseCases
 ) : ViewModel() {
 
     var state by mutableStateOf(ProfileState())
         private set
 
-//    private var countries = repository.getCountries()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

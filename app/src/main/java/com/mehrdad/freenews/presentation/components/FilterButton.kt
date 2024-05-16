@@ -22,14 +22,14 @@ fun FilterButton(
     modifier: Modifier,
     text:String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onFilterSelected: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     OutlinedButton(
         modifier = modifier,
         onClick = {
             if (!isSelected) {
-                onClick()
+                onFilterSelected()
             }
         },
         border = if (isSelected) {
@@ -39,7 +39,7 @@ fun FilterButton(
         Text(
             modifier = Modifier.padding(
                 horizontal = spacing.spaceSemiMedium),
-            text = text,
+            text = text.replaceFirstChar { it.uppercase() },
             fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
@@ -55,5 +55,5 @@ fun FilterButton(
 )
 @Composable
 fun FilterButtonPreview() {
-    FilterButton(modifier = Modifier.padding(8.dp), text = "General",isSelected = true,onClick = { })
+    FilterButton(modifier = Modifier.padding(8.dp), text = "General",isSelected = true,onFilterSelected = { })
 }

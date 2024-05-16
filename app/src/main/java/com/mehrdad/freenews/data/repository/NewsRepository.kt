@@ -11,6 +11,12 @@ interface NewsRepository {
         apiKey: String
     ): Result<List<Article>>
 
+    suspend fun getHeadlinesForCountryAndCategory(
+        country: String,
+        apiKey: String,
+        category: String
+    ): Result<List<Article>>
+
     suspend fun upsertUserSettings(userSettings: UserSettings)
 
     suspend fun readUserSettings(userId: Int): List<UserSettings>
