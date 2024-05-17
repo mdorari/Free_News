@@ -103,7 +103,6 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                     state = state.copy(
-                        bannerNews = mappedArticle.first(),
                         articlesByCategory = mappedArticle.drop(1),
                         isRefreshing = false
                     )
@@ -154,8 +153,11 @@ class HomeViewModel @Inject constructor(
                             urlToImage = article.urlToImage
                                 ?: "https://demofree.sirv.com/nope-not-here.jpg?w=150"
                         )
+                    }.filter { article ->
+                        article.title != "[Removed]"
                     }
                     state = state.copy(
+                        bannerNews = mappedArticle.first(),
                         articles = mappedArticle.drop(1),
                         isRefreshing = false
                     )
