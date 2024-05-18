@@ -5,7 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import com.mehrdad.freenews.util.NewsNotificationService
+import com.mehrdad.freenews.presentation.service.NewsNotificationService
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -21,7 +21,7 @@ class MyApplication : Application() {
             val channel = NotificationChannel(
                 NewsNotificationService.CHANNEL_ID,
                 "latest news",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             )
             channel.description = "Used for latest news notifications"
 

@@ -1,6 +1,5 @@
 package com.mehrdad.freenews.presentation.profile
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -59,7 +58,6 @@ class ProfileViewModel @Inject constructor(
                     state = state.copy(
                         selectedCountry = event.selectedCountry
                     )
-                    Log.d("Mehrdad select country", "onEvent: ${event.selectedCountry}")
 //                    _uiEvent.send(
 //                        UiEvent
 //                            .showSnackBar(

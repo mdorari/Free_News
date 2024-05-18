@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,18 +40,26 @@ import com.mehrdad.freenews.presentation.article.ArticleScreen
 import com.mehrdad.freenews.presentation.home.HomeScreen
 import com.mehrdad.freenews.presentation.navigation.Route
 import com.mehrdad.freenews.presentation.profile.ProfileScreen
-import com.mehrdad.freenews.presentation.profile.ProfileViewModel
+import com.mehrdad.freenews.presentation.splashScreen.SplashViewModel
+import com.mehrdad.freenews.presentation.welcome.WelcomeScreen
 import com.mehrdad.freenews.ui.theme.FreeNewsTheme
 import com.mehrdad.freenews.ui.theme.Secondary
 import com.mehrdad.freenews.ui.theme.Tertiary
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var splashViewModel: SplashViewModel
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().setKeepOnScreenCondition {
+            !splashViewModel.isLoading.value
+        }
         setContent {
             FreeNewsTheme {
                 // A surface container using the 'background' color from the theme
@@ -59,12 +67,17 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
+
+                    val startDestination by splashViewModel.startDestination
                     val spacing = LocalSpacing.current
                     var selectedItemIndex by rememberSaveable {
                         mutableIntStateOf(0)
                     }
                     var shouldShowTopBar by rememberSaveable {
                         mutableStateOf(false)
+                    }
+                    var shouldShowBottomBar by rememberSaveable {
+                        mutableStateOf(true)
                     }
                     val navigationItem = BottomNavigationItem.navbarItems
                     val navController = rememberNavController()
@@ -87,68 +100,52 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
-//                            Spacer(
-//                                modifier = Modifier
-//                                    .height(spacing.spaceXXLarge)
-//                                    .fillMaxWidth()
-//                                    .background(Primary)
-//                            )
                         },
                         bottomBar = {
-                            NavigationBar(containerColor = Color.White) {
-                                navigationItem.forEachIndexed { index, item ->
-                                    NavigationBarItem(
-                                        colors = NavigationBarItemDefaults.colors(
-                                            indicatorColor = Color.White
-                                        ),
-                                        selected = selectedItemIndex == index,
-                                        onClick = {
-                                            if (selectedItemIndex != index) {
-                                                selectedItemIndex = index
+                            if (shouldShowBottomBar) {
+                                NavigationBar(containerColor = Color.White) {
+                                    navigationItem.forEachIndexed { index, item ->
+                                        NavigationBarItem(
+                                            colors = NavigationBarItemDefaults.colors(
+                                                indicatorColor = Color.White
+                                            ),
+                                            selected = selectedItemIndex == index,
+                                            onClick = {
+                                                if (selectedItemIndex != index) {
+                                                    selectedItemIndex = index
 
-                                                navController.popBackStack()
-                                                navController.navigate(item.route)
+                                                    navController.popBackStack()
+                                                    navController.navigate(item.route)
 
-//                                                navController.navigate(item.route) {
-//                                                    // Pop up to the start destination of the navigation graph
-//                                                    popUpTo(navController.graph.startDestinationId) {
-//                                                        // Inclusive of the start destination
-//                                                        inclusive = true
-//                                                    }
-//                                                    // Avoid multiple copies of the same destination when reselecting the same item
-//                                                    launchSingleTop = true
-//                                                    // Restore state when navigating back to a previously visited destination
-//                                                    restoreState = true
-//                                                }
-//                                                navController.popBackStack()
+                                                }
+                                            },
+                                            label = {
+                                                Text(
+                                                    text = item.title,
+                                                    color = if (selectedItemIndex == index) {
+                                                        Tertiary
+                                                    } else Secondary,
+                                                    fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
+                                                    fontWeight = if (selectedItemIndex == index) {
+                                                        FontWeight.Bold
+                                                    } else FontWeight.Thin,
+                                                    fontSize = 12.sp,
+                                                    letterSpacing = (-0.7).sp
+                                                )
+                                            },
+                                            icon = {
+                                                Icon(
+                                                    imageVector = if (selectedItemIndex == index) {
+                                                        item.selectedIcon
+                                                    } else item.unselectedIcon,
+                                                    contentDescription = item.title,
+                                                    tint = if (selectedItemIndex == index) {
+                                                        Tertiary
+                                                    } else Secondary,
+                                                )
                                             }
-                                        },
-                                        label = {
-                                            Text(
-                                                text = item.title,
-                                                color = if (selectedItemIndex == index) {
-                                                    Tertiary
-                                                } else Secondary,
-                                                fontFamily = FontFamily(Font(R.font.archivo_variable_font_wdth_wght)),
-                                                fontWeight = if (selectedItemIndex == index) {
-                                                    FontWeight.Bold
-                                                } else FontWeight.Thin,
-                                                fontSize = 12.sp,
-                                                letterSpacing = (-0.7).sp
-                                            )
-                                        },
-                                        icon = {
-                                            Icon(
-                                                imageVector = if (selectedItemIndex == index) {
-                                                    item.selectedIcon
-                                                } else item.unselectedIcon,
-                                                contentDescription = item.title,
-                                                tint = if (selectedItemIndex == index) {
-                                                    Tertiary
-                                                } else Secondary,
-                                            )
-                                        }
-                                    )
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -156,12 +153,14 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             modifier = Modifier.padding(it),
                             navController = navController,
-                            startDestination = Route.HOME
+                            startDestination = startDestination
                         ) {
                             composable(Route.HOME) {
                                 shouldShowTopBar = false
+                                shouldShowBottomBar = true
                                 HomeScreen(
-                                    navController = navController,
+                                    splashViewModel = splashViewModel,
+//                                    navController = navController,
                                     navigateToDetails = { article ->
                                         navigateToDetails(
                                             navController = navController,
@@ -172,19 +171,32 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(Route.PROFILE) {
                                 shouldShowTopBar = false
-                                val viewModel: ProfileViewModel = hiltViewModel()
-                                ProfileScreen(navController = navController, event = { event ->
-                                    viewModel::onEvent
-                                })
+                                shouldShowBottomBar = true
+
+//                                val viewModel: ProfileViewModel = hiltViewModel()
+                                ProfileScreen(
+//                                    navController = navController,
+//                                    event = { event ->
+//                                    viewModel::onEvent
+//                                }
+                                )
                             }
                             composable(Route.ARTICLE) {
                                 shouldShowTopBar = true
+                                shouldShowBottomBar = false
                                 navController.previousBackStackEntry?.savedStateHandle?.get<Article?>(
                                     "article"
                                 )
                                     ?.let { article ->
                                         ArticleScreen(article = article)
                                     }
+                            }
+                            composable(Route.WELCOME) {
+                                shouldShowBottomBar = false
+                                shouldShowTopBar = false
+                                WelcomeScreen(
+                                    navController = navController
+                                )
                             }
                         }
                     }
