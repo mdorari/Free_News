@@ -1,10 +1,12 @@
 package com.mehrdad.freenews.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.mehrdad.freenews.data.local.NewsDao
 import com.mehrdad.freenews.data.local.NewsDatabase
 import com.mehrdad.freenews.data.remote.api.NewsApi
+import com.mehrdad.freenews.data.repository.DataStoreRepository
 import com.mehrdad.freenews.data.repository.NewsRepository
 import com.mehrdad.freenews.data.repository.NewsRepositoryImpl
 import com.mehrdad.freenews.domain.usecase.GetCountryByInitials
@@ -16,6 +18,7 @@ import com.mehrdad.freenews.domain.usecase.UpsertUserSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -92,4 +95,10 @@ object NewsModule {
             getNewsForCountryByCategory = GetNewsForCountryByCategory(repository)
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideDataStoreRepository(
+        @ApplicationContext context: Context
+    ) = DataStoreRepository(context = context)
 }

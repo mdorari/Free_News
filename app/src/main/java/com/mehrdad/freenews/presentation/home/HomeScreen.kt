@@ -1,5 +1,9 @@
 package com.mehrdad.freenews.presentation.home
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.mehrdad.freenews.R
 import com.mehrdad.freenews.data.remote.model.remote.Article
 import com.mehrdad.freenews.presentation.LocalSpacing
@@ -35,22 +38,41 @@ import com.mehrdad.freenews.presentation.UiEvent
 import com.mehrdad.freenews.presentation.components.FilterButton
 import com.mehrdad.freenews.presentation.components.NewsCard
 import com.mehrdad.freenews.presentation.components.OtherNews
+import com.mehrdad.freenews.presentation.service.NewsNotificationService
+import com.mehrdad.freenews.presentation.splashScreen.SplashViewModel
 import com.mehrdad.freenews.ui.theme.Tertiary
+import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    navController: NavController,
+    splashViewModel: SplashViewModel,
+//    navController: NavController,
     navigateToDetails: (Article) -> Unit,
 ) {
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            splashViewModel.saveNotificationPermissionState(isGranted)
+        }
+    )
+
     val spacing = LocalSpacing.current
     val state = viewModel.state
     val context = LocalContext.current
     var selectedFilterIndex by remember {
         mutableIntStateOf(0)
     }
+    val service = NewsNotificationService(context)
 
     LaunchedEffect(true) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!splashViewModel.hadNotificationPermission.value) {
+                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.showSnackBar -> {
@@ -82,6 +104,11 @@ fun HomeScreen(
                 CircularProgressIndicator()
             }
         } else {
+            LaunchedEffect(key1 = true)  {
+                delay(5000)
+                val randomArticleIndex = Random.nextInt(from = 0, until = state.articles.size/2)
+                service.sendNewsNotification(state.articles[randomArticleIndex])
+            }
             Text(
                 modifier = Modifier.padding(spacing.spaceMedium),
                 text = "Now!",
@@ -92,7 +119,7 @@ fun HomeScreen(
                 letterSpacing = (-0.5).sp
             )
             NewsCard(article = state.bannerNews,
-                onClick = {navigateToDetails(state.bannerNews)})
+                onClick = { navigateToDetails(state.bannerNews) })
             Text(
                 modifier = Modifier.padding(spacing.spaceMedium),
                 text = "Other News:",
@@ -109,8 +136,9 @@ fun HomeScreen(
             ) {
                 items(otherNews) { item ->
                     OtherNews(
-                        onClick = {navigateToDetails(item)},
-                        article = item)
+                        onClick = { navigateToDetails(item) },
+                        article = item
+                    )
                 }
             }
             LazyRow(
@@ -137,8 +165,9 @@ fun HomeScreen(
             ) {
                 items(newsByCategory) { item ->
                     OtherNews(
-                        onClick = {navigateToDetails(item)},
-                        article = item)
+                        onClick = { navigateToDetails(item) },
+                        article = item
+                    )
                 }
             }
         }

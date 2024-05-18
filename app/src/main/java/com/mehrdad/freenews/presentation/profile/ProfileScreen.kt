@@ -6,14 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.mehrdad.freenews.data.remote.model.Country
 
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
-    event: (ProfileEvent) -> Unit,
-    navController: NavController
+//    event: (ProfileEvent) -> Unit,
+//    navController: NavController
 ) {
 
     Column(Modifier.fillMaxWidth()) {
